@@ -1,2 +1,2 @@
 # palautusrepositorio
-Helsingin yliopiston ohjelmistotuotannon kurssin harjoitusrepositorio
+ohtuvarasto: https://github.com/matiashei/ohtuvarasto
