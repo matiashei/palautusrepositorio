@@ -1,6 +1,18 @@
+from rich.console import Console
+from rich.table import Table
+
+
 class Player:
-    def __init__(self, dict):
-        self.name = dict['name']
-    
+    def __init__(self, player_dict):
+        self.name = player_dict.get("name")
+        self.nationality = player_dict.get("nationality")
+        self.team = player_dict.get("team")
+        self.goals = player_dict.get("goals")
+        self.assists = player_dict.get("assists")
+
+    @property
+    def points(self):
+        return self.goals + self.assists
+
     def __str__(self):
-        return self.name
+        return f"{self.name}, ({self.team}), {self.goals}, {self.assists}, {self.points}"
