@@ -1,7 +1,3 @@
-from rich.console import Console
-from rich.table import Table
-
-
 class Player:
     def __init__(self, player_dict):
         self.name = player_dict.get("name")

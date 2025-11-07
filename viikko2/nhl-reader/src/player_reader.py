@@ -1,12 +1,12 @@
-from player import Player
 import requests
+from player import Player
 
-class PlayerReader:
+class PlayerReader: # pylint: disable=too-few-public-methods
     def __init__(self, url):
         self.url = url
 
     def get_players(self):
-        response = requests.get(self.url).json()
+        response = requests.get(self.url, timeout=10).json()
 
         players = []
 
