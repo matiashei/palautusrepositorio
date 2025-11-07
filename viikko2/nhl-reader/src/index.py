@@ -5,19 +5,39 @@ from player_stats import PlayerStats
 from rich.console import Console
 from rich.table import Table
 from rich.console import Console
+from rich.console import Console
+
 
 def main():
-    url = "https://studies.cs.helsinki.fi/nhlstats/2024-25/players"
-    reader = PlayerReader(url)
-    stats = PlayerStats(reader)
-    from rich.console import Console
     console = Console()
 
+    valid_seasons = {"2018-19", "2019-20", "2020-21", "2021-22",
+                     "2022-23", "2023-24", "2024-25", "2025-26"}
+
+    valid_nationalities = {"USA", "FIN", "CAN", "SWE", "CZE", "RUS",
+                           "SLO", "FRA", "GBR", "SVK", "DEN", "NED",
+                           "AUT", "BLR", "GER", "SUI", "NOR", "UZB",
+                           "LAT", "AUS"}
+
     while True:
-        nat = console.input("Nationality [bold red][USA/FIN/CAN/SWE/CZE/RUS/SLO/FRA/GBR/SVK/DEN/NED/AUT/BLR/GER/SUI/NOR/UZB/LAT/AUS][/]")
+        season = console.input("Season [2018-19/2019-20/2020-21/2021-22/2022-23/2023-24/2024-25/2025-26, quit] ")
+        if season == "quit":
+            break
+        elif season not in valid_seasons:
+            console.print("Season not valid!")
+            continue
+
+        nat = console.input("Nationality [USA/FIN/CAN/SWE/CZE/RUS/SLO/FRA/GBR/SVK/DEN/NED/AUT/BLR/GER/SUI/NOR/UZB/LAT/AUS]")
+        if nat not in valid_nationalities:
+            console.print("Nationality not valid!")
+            continue
+
+        url = f"https://studies.cs.helsinki.fi/nhlstats/{season}/players"
+        reader = PlayerReader(url)
+        stats = PlayerStats(reader)
         players = stats.top_scorers_by_nationality(nat)
 
-        table = Table(title=f"Season 2024-2025 players from {nat}")
+        table = Table(title=f"Season {season} players from {nat}")
 
         table.add_column("Name", justify="right", style="cyan", no_wrap=True)
         table.add_column("Team(s)", style="magenta")
