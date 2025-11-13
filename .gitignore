@@ -1,0 +1,40 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Python packaging
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Poetry
+poetry.lock
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Robot Framework logs and reports
+log.html
+report.html
+output.xml
+*.png
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
