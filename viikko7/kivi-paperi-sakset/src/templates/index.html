@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Kivi Paperi Sakset - Valitse pelityyppi{% endblock %}
+
+{% block content %}
+<h1>🪨 📄 ✂️</h1>
+<h2 style="text-align: center; margin-bottom: 30px;">Valitse pelityyppi</h2>
+
+<div class="menu">
+    <a href="{{ url_for('start_game', game_type='pvp') }}" class="btn">
+        👥 Pelaaja vs Pelaaja
+    </a>
+    <a href="{{ url_for('start_game', game_type='ai') }}" class="btn">
+        🤖 Pelaaja vs Tekoäly
+    </a>
+    <a href="{{ url_for('start_game', game_type='better_ai') }}" class="btn">
+        🧠 Pelaaja vs Parannettu Tekoäly
+    </a>
+</div>
+
+<div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+    <h3 style="color: #667eea; margin-bottom: 10px;">Säännöt:</h3>
+    <ul style="list-style-position: inside; color: #555;">
+        <li>🪨 Kivi voittaa Sakset</li>
+        <li>📄 Paperi voittaa Kiven</li>
+        <li>✂️ Sakset voittaa Paperin</li>
+    </ul>
+</div>
+{% endblock %}

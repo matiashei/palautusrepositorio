@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game_name }}{% endblock %}
+
+{% block content %}
+<h1>{{ game_name }}</h1>
+
+{% if game_over %}
+<div class="game-over">
+    <h2>Peli päättyi!</h2>
+    {% if winner %}
+    <p style="font-size: 1.5em; margin: 20px 0;">🏆 {{ winner }} voitti! 🏆</p>
+    {% else %}
+    <p>Kiitos pelaamisesta!</p>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="score-board">
+    <h2 style="margin-bottom: 15px;">📊 Pisteet (Voittoraja: {{ voittoraja }})</h2>
+    <div class="score-item">
+        <strong>Pelaaja 1:</strong> {{ score.pelaaja1 }}
+    </div>
+    <div class="score-item">
+        <strong>{% if is_pvp %}Pelaaja 2{% else %}Tietokone{% endif %}:</strong> {{ score.pelaaja2 }}
+    </div>
+    <div class="score-item">
+        <strong>Tasapelit:</strong> {{ score.tasapelit }}
+    </div>
+</div>
+
+{% if message %}
+<div class="message error">
+    {{ message }}
+</div>
+{% endif %}
+
+{% if last_round %}
+<div class="last-round">
+    <h3 style="text-align: center; margin-bottom: 10px;">Viimeisin kierros:</h3>
+    <div class="round-moves">
+        <div class="player-move">
+            <strong>Pelaaja 1</strong>
+            <span class="emoji">
+                {% if last_round.pelaaja1 == 'k' %}🪨
+                {% elif last_round.pelaaja1 == 'p' %}📄
+                {% else %}✂️{% endif %}
+            </span>
+            <span>{{ last_round.pelaaja1|siirto_nimi }}</span>
+        </div>
+        <div style="font-size: 2em;">⚔️</div>
+        <div class="player-move">
+            <strong>{% if is_pvp %}Pelaaja 2{% else %}Tietokone{% endif %}</strong>
+            <span class="emoji">
+                {% if last_round.pelaaja2 == 'k' %}🪨
+                {% elif last_round.pelaaja2 == 'p' %}📄
+                {% else %}✂️{% endif %}
+            </span>
+            <span>{{ last_round.pelaaja2|siirto_nimi }}</span>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if not game_over %}
+<form method="POST" id="gameForm">
+    <div class="game-controls">
+        <h3 style="text-align: center; margin-bottom: 15px;">Tee siirtosi:</h3>
+
+        <div class="move-buttons">
+            <button type="button" class="move-btn" onclick="selectMove(this, 'k')" data-move="k">
+                🪨
+            </button>
+            <button type="button" class="move-btn" onclick="selectMove(this, 'p')" data-move="p">
+                📄
+            </button>
+            <button type="button" class="move-btn" onclick="selectMove(this, 's')" data-move="s">
+                ✂️
+            </button>
+        </div>
+
+        <input type="hidden" name="ekan_siirto" id="ekan_siirto" required>
+
+        {% if is_pvp %}
+        <div style="margin-top: 30px;">
+            <h3 style="text-align: center; margin-bottom: 15px;">Pelaaja 2, tee siirtosi:</h3>
+            <div class="move-buttons">
+                <button type="button" class="move-btn" onclick="selectMove2(this, 'k')" data-move="k">
+                    🪨
+                </button>
+                <button type="button" class="move-btn" onclick="selectMove2(this, 'p')" data-move="p">
+                    📄
+                </button>
+                <button type="button" class="move-btn" onclick="selectMove2(this, 's')" data-move="s">
+                    ✂️
+                </button>
+            </div>
+            <input type="hidden" name="tokan_siirto" id="tokan_siirto" required>
+        </div>
+        {% endif %}
+    </div>
+</form>
+{% endif %}
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{{ url_for('reset') }}" class="btn btn-secondary">
+        🔄 Aloita alusta
+    </a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedMove1 = null;
+let selectedMove2 = null;
+const isPvP = {{ 'true' if is_pvp else 'false' }};
+
+function selectMove(button, move) {
+    // Poista aiempi valinta
+    document.querySelectorAll('.move-btn').forEach(btn => {
+        if (btn.parentElement === button.parentElement) {
+            btn.classList.remove('selected');
+        }
+    });
+
+    // Lisää valinta
+    button.classList.add('selected');
+    document.getElementById('ekan_siirto').value = move;
+    selectedMove1 = move;
+
+    // Jos ei ole PvP-peli, lähetä lomake heti
+    if (!isPvP) {
+        document.getElementById('gameForm').submit();
+    }
+}
+
+function selectMove2(button, move) {
+    // Poista aiempi valinta
+    const container = button.parentElement;
+    container.querySelectorAll('.move-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+
+    // Lisää valinta
+    button.classList.add('selected');
+    document.getElementById('tokan_siirto').value = move;
+    selectedMove2 = move;
+
+    // PvP-pelissä lähetä lomake kun molemmat ovat valinneet
+    if (isPvP && selectedMove1 && selectedMove2) {
+        document.getElementById('gameForm').submit();
+    }
+}
+</script>
+{% endblock %}

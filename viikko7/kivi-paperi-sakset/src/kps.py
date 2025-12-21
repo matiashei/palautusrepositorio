@@ -1,0 +1,44 @@
+from tuomari import Tuomari
+
+class KiviPaperiSakset:
+    def pelaa(self):
+        tuomari = Tuomari()
+        voittoraja = 3
+
+        ekan_siirto = self._ensimmaisen_siirto()
+        tokan_siirto = self._toisen_siirto(ekan_siirto)
+
+        while self._onko_ok_siirto(ekan_siirto) and self._onko_ok_siirto(tokan_siirto):
+            tuomari.kirjaa_siirto(ekan_siirto, tokan_siirto)
+            print(tuomari)
+
+            self._tallenna_siirto(ekan_siirto)
+
+            # Tarkistetaan onko jompikumpi voittanut 3 kierrosta
+            if tuomari.ekan_pisteet >= voittoraja or tuomari.tokan_pisteet >= voittoraja:
+                break
+
+            ekan_siirto = self._ensimmaisen_siirto()
+            tokan_siirto = self._toisen_siirto(ekan_siirto)
+
+        print("Kiitos!")
+        print(tuomari)
+
+        # Ilmoitetaan voittaja
+        if tuomari.ekan_pisteet >= voittoraja:
+            print("Pelaaja 1 voitti!")
+        elif tuomari.tokan_pisteet >= voittoraja:
+            print("Pelaaja 2 voitti!")
+
+
+    def _ensimmaisen_siirto(self):
+        return input("Ensimmäisen pelaajan siirto: ")
+
+    def _toisen_siirto(self, _ensimmaisen_siirto):
+        raise Exception("Tämä metodi pitää korvata aliluokassa")
+
+    def _tallenna_siirto(self, _siirto):
+        pass
+
+    def _onko_ok_siirto(self, siirto):
+        return siirto in ("k", "p", "s")
